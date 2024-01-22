@@ -1,0 +1,57 @@
+1, Find all the information about each products
+Solution: db.contents.find()
+
+2,  Find the product price which are between 400 to 800
+Solution: db.contents.find(
+          {$and:[{product_price:{$gt:400}},{product_price:{$lt:800}}]}
+          )
+
+3, Find the product price which are not between 400 to 600.
+Solution: db.contents.find(
+          {$or:[{product_price:{$gt:600}},{product_price:{$lt:400}}]}
+          )
+
+4, List the four product which are greater than 500 in price.
+Solution: db.contents.find(
+          {product_price:{$gt:500}}
+          ).limit(4)
+
+5, Find the product name and product material of each products.
+Solution: db.contents.find({},{product_name:0},{product_material:0})
+
+6, Find the product with a row id of 10.
+Solution: db.contents.findOne
+          (
+          {_id:ObjectId('65ae131f6920c280b445dfcd')}
+          )
+
+7,  Find only the product name and product material.
+Solution: db.contents.find
+          ({},
+          {product_name:1},{product_material:0}
+          )
+
+8, Find all products which contain the value of soft in product material.
+Solution: db.contents.find
+          ({},
+          {product_material:"soft"}
+          )
+
+9, Find products which contain product color indigo  and product price 492.00
+Solution: db.contents.find
+        (
+          {$or:
+	       [
+            {product_name:1},
+            {product_color:'indigo'},
+            {product_price:492}
+           ]
+          } 
+        )
+
+10, Delete the products which product price value are same
+Solution: db.contents.aggregate([{$group:{_id:'$product_price',count:{$sum:1}}},
+          {$match: {count : {$gt: 1}}}]).forEach((e) => 
+          {
+            db.contents.deleteMany({product_price: e._id})
+          })
